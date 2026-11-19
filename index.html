@@ -127,22 +127,19 @@ function back(){if(step>0){step--;render()}}
 function scheme(slot,idx){
   const comp=COMPOUND.has(slot)&&idx<3, g=A.goal;
   let sets=A.exp==="new"?2:3, reps;
-  if(g==="strength")reps=comp?"5–8":"10–12";
-  else if(g==="fat")reps=comp?"8–12":"12–15";
-  else reps=comp?"6–10":"10–15";
+  reps=comp?"6–10":"8–12";
   if(slot==="core"||slot==="core2")return `${sets} × 10–15`;
   if(A.equip==="bw"){const nm=LIB[slot].bw;
     if(/iso hold/.test(nm))return `${sets} × 20–30 sec hold`;
     if(/Squat|Lunge|Bridge|Calf|Dip|Tap/.test(nm))reps="12–20, slow on the way down";
-    else reps="as many as you can, stop 2 short";}
-  if(A.exp!=="new"&&comp&&g==="strength")sets=4;
+    else reps="to failure, or 1–2 reps short";}
   return `${sets} × ${reps}`;
 }
 function buildPlan(){
-  const n={"30":4,"45":5,"60":6}[A.time];
+  const n={"30":3,"45":5,"60":6}[A.time];
   return SPLITS[A.days].map(([name,slots])=>[name,slots.slice(0,n).map((s,i)=>[LIB[s][A.equip],scheme(s,i)])]);
 }
-function rest(){return A.goal==="strength"?"2–3 min on the first 3 lifts, 1–2 min on the rest":A.goal==="fat"?"60–90 sec":"90 sec–2 min on the first 3 lifts, 60–90 sec on the rest"}
+function rest(){return "2–3 min between every set — full rest means more reps, and more reps means more growth"}
 function goalTips(){
   return {
     muscle:["Eat enough protein most days — roughly 0.7–1 g per lb of bodyweight.","Sleep 7–9 hours. That's when you actually grow."],
@@ -157,7 +154,7 @@ function renderResult(name){
   let h=`<h1>${who} your <span>${A.days}-day plan</span></h1><p class="sub">Goal: ${labels[A.goal]} · ${A.time} min sessions · Train: ${SCHED[A.days]}</p>`;
   h+=plan.map(([d,ex])=>`<div class="day"><h3>${d}</h3>${ex.map(([e,s])=>`<div class="ex"><b>${e}</b><span>${s}</span></div>`).join("")}</div>`).join("");
   h+=`<div class="box"><h4>How to progress (the part most beginners skip)</h4><ul>
-  <li>Pick a weight you could lift 2–3 more reps with at the end of each set.</li>
+  <li>Every set should be hard: go to failure, or stop when you only have 1–2 clean reps left.</li>
   <li>When you hit the <b>top</b> of the rep range on every set, ${A.equip==="bw"?"make it harder next time — slower reps, a pause at the bottom, or a harder variation":"add a little weight next time"}.</li>
   <li>Write down every set. If the numbers go up over weeks, it's working.</li></ul></div>`;
   h+=`<div class="box"><h4>The basics</h4><ul><li>Rest: ${rest()}.</li><li>Warm up with 1–2 light sets of your first exercise.</li>${A.equip==="bw"?"<li>Grab a cheap doorway pull-up bar — it's the best home upgrade for your back. No bar yet? Do Table Rows instead of Pull-Ups: lie under a sturdy table, grab the edge and pull your chest up to it.</li>":""}${A.exp==="new"?"<li>First 2 weeks: go light and learn the movements. Ego can wait.</li>":""}${goalTips().map(t=>`<li>${t}</li>`).join("")}</ul></div>`;
