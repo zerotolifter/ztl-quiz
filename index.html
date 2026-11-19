@@ -91,8 +91,8 @@ const LIB = {
   hinge:{gym:"Romanian Deadlift",db:"Dumbbell Romanian Deadlift",bw:"Glute Bridge"},
   hpush:{gym:"Barbell Bench Press",db:"Dumbbell Floor Press",bw:"Push-Up"},
   vpush:{gym:"Dumbbell Shoulder Press",db:"Dumbbell Shoulder Press",bw:"Pike Push-Up"},
-  hpull:{gym:"Seated Cable Row",db:"One-Arm Dumbbell Row",bw:"Superman"},
-  vpull:{gym:"Lat Pulldown",db:"Dumbbell Pullover",bw:"Pull-Up (or Superman if no bar)"},
+  hpull:{gym:"Seated Cable Row",db:"One-Arm Dumbbell Row",bw:"Table Row (under a sturdy table)"},
+  vpull:{gym:"Lat Pulldown",db:"Dumbbell Pullover",bw:"Pull-Up (no bar? do Table Rows)"},
   single:{gym:"Leg Extension",db:"Dumbbell Step-Up",bw:"Reverse Lunge"},
   hams:{gym:"Lying Leg Curl",db:"Dumbbell Hip Thrust",bw:"Single-Leg Glute Bridge"},
   calf:{gym:"Standing Calf Raise",db:"Dumbbell Calf Raise",bw:"Calf Raise"},
@@ -133,7 +133,7 @@ function scheme(slot,idx){
   if(slot==="core"||slot==="core2")return `${sets} × 10–15`;
   if(A.equip==="bw"){const nm=LIB[slot].bw;
     if(/iso hold/.test(nm))return `${sets} × 20–30 sec hold`;
-    if(/Squat|Lunge|Bridge|Calf|Superman|Dip|Tap/.test(nm))reps="12–20, slow on the way down";
+    if(/Squat|Lunge|Bridge|Calf|Dip|Tap/.test(nm))reps="12–20, slow on the way down";
     else reps="as many as you can, stop 2 short";}
   if(A.exp!=="new"&&comp&&g==="strength")sets=4;
   return `${sets} × ${reps}`;
@@ -160,7 +160,7 @@ function renderResult(name){
   <li>Pick a weight you could lift 2–3 more reps with at the end of each set.</li>
   <li>When you hit the <b>top</b> of the rep range on every set, ${A.equip==="bw"?"make it harder next time — slower reps, a pause at the bottom, or a harder variation":"add a little weight next time"}.</li>
   <li>Write down every set. If the numbers go up over weeks, it's working.</li></ul></div>`;
-  h+=`<div class="box"><h4>The basics</h4><ul><li>Rest: ${rest()}.</li><li>Warm up with 1–2 light sets of your first exercise.</li>${A.exp==="new"?"<li>First 2 weeks: go light and learn the movements. Ego can wait.</li>":""}${goalTips().map(t=>`<li>${t}</li>`).join("")}</ul></div>`;
+  h+=`<div class="box"><h4>The basics</h4><ul><li>Rest: ${rest()}.</li><li>Warm up with 1–2 light sets of your first exercise.</li>${A.equip==="bw"?"<li>Grab a cheap doorway pull-up bar — it's the best home upgrade for your back. No bar yet? Do Table Rows instead of Pull-Ups: lie under a sturdy table, grab the edge and pull your chest up to it.</li>":""}${A.exp==="new"?"<li>First 2 weeks: go light and learn the movements. Ego can wait.</li>":""}${goalTips().map(t=>`<li>${t}</li>`).join("")}</ul></div>`;
   h+=`<p class="fine">General fitness information only — not medical advice. If something hurts (sharp or worsening pain, not normal muscle effort), stop and check with a health professional.</p>`;
   h+=`<p class="fine" style="margin-top:18px">Made by <b>@zerotolifter</b> — new tips every day on IG, TikTok and YouTube.</p>`;
   const r=document.getElementById("result"); r.innerHTML=h; show("result");
