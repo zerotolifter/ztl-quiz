@@ -89,18 +89,18 @@ const LIB = {
   squat:{gym:"Barbell Back Squat",db:"Dumbbell Squat",bw:"Bodyweight Squat"},
   squat2:{gym:"Leg Press",db:"Dumbbell Sumo Squat",bw:"Jump Squat"},
   hinge:{gym:"Romanian Deadlift",db:"Dumbbell Romanian Deadlift",bw:"Glute Bridge"},
-  hpush:{gym:"Barbell Bench Press",db:"Dumbbell Floor Press",bw:"Push-Up (incline if needed)"},
+  hpush:{gym:"Barbell Bench Press",db:"Dumbbell Floor Press",bw:"Push-Up"},
   vpush:{gym:"Dumbbell Shoulder Press",db:"Dumbbell Shoulder Press",bw:"Pike Push-Up"},
-  hpull:{gym:"Seated Cable Row",db:"One-Arm Dumbbell Row",bw:"Table / Towel Row"},
-  vpull:{gym:"Lat Pulldown",db:"Dumbbell Pullover",bw:"Doorframe Row"},
-  single:{gym:"Leg Extension",db:"Dumbbell Step-Up",bw:"Wall Sit (iso hold)"},
+  hpull:{gym:"Seated Cable Row",db:"One-Arm Dumbbell Row",bw:"Superman"},
+  vpull:{gym:"Lat Pulldown",db:"Dumbbell Pullover",bw:"Pull-Up (or Superman if no bar)"},
+  single:{gym:"Leg Extension",db:"Dumbbell Step-Up",bw:"Reverse Lunge"},
   hams:{gym:"Lying Leg Curl",db:"Dumbbell Hip Thrust",bw:"Single-Leg Glute Bridge"},
   calf:{gym:"Standing Calf Raise",db:"Dumbbell Calf Raise",bw:"Calf Raise"},
   core:{gym:"Hanging Knee Raise",db:"Lying Leg Raise",bw:"Lying Leg Raise"},
   core2:{gym:"Cable Crunch",db:"Crunch",bw:"Crunch"},
-  bi:{gym:"Dumbbell Curl",db:"Dumbbell Curl",bw:"Towel Curl (iso hold)"},
-  tri:{gym:"Triceps Pushdown",db:"Overhead Dumbbell Extension",bw:"Bench Dip"},
-  side:{gym:"Lateral Raise",db:"Lateral Raise",bw:"Wall Lateral Raise (iso hold)"}
+  bi:{gym:"Dumbbell Curl",db:"Dumbbell Curl",bw:"Diamond Push-Up"},
+  tri:{gym:"Triceps Pushdown",db:"Overhead Dumbbell Extension",bw:"Chair Dip"},
+  side:{gym:"Lateral Raise",db:"Lateral Raise",bw:"Plank Shoulder Tap"}
 };
 
 const SPLITS = {
@@ -133,7 +133,7 @@ function scheme(slot,idx){
   if(slot==="core"||slot==="core2")return `${sets} × 10–15`;
   if(A.equip==="bw"){const nm=LIB[slot].bw;
     if(/iso hold/.test(nm))return `${sets} × 20–30 sec hold`;
-    if(/Squat|Lunge|Bridge|Calf|Walkout|Dip/.test(nm))reps="12–20, slow on the way down";
+    if(/Squat|Lunge|Bridge|Calf|Superman|Dip|Tap/.test(nm))reps="12–20, slow on the way down";
     else reps="as many as you can, stop 2 short";}
   if(A.exp!=="new"&&comp&&g==="strength")sets=4;
   return `${sets} × ${reps}`;
