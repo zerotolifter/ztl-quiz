@@ -98,19 +98,24 @@ const LIB = {
   calf:{gym:"Standing Calf Raise",db:"Dumbbell Calf Raise",bw:"Calf Raise"},
   core:{gym:"Hanging Knee Raise",db:"Lying Leg Raise",bw:"Lying Leg Raise"},
   core2:{gym:"Cable Crunch",db:"Crunch",bw:"Crunch"},
-  bi:{gym:"Dumbbell Curl",db:"Dumbbell Curl",bw:"Diamond Push-Up"},
+  bi:{gym:"Dumbbell Curl",db:"Dumbbell Curl",bw:"Chin-Up (no bar? underhand Table Row)"},
   tri:{gym:"Triceps Pushdown",db:"Overhead Dumbbell Extension",bw:"Chair Dip"},
-  side:{gym:"Lateral Raise",db:"Lateral Raise",bw:"Plank Shoulder Tap"}
+  side:{gym:"Lateral Raise",db:"Lateral Raise",bw:"Plank Shoulder Tap"},
+  ipush:{gym:"Incline Dumbbell Press",db:"Push-Up",bw:"Decline Push-Up (feet on a chair)"},
+  tri2:{gym:"Overhead Cable Triceps Extension",db:"Dumbbell Skull Crusher",bw:"Close-Grip Push-Up"},
+  row2:{gym:"One-Arm Dumbbell Row",db:"Dumbbell Bent-Over Row",bw:"Wide-Grip Table Row"},
+  rear:{gym:"Face Pull",db:"Rear Delt Fly",bw:"Superman"},
+  bi2:{gym:"Hammer Curl",db:"Hammer Curl",bw:"Underhand Table Row"}
 };
 
 const SPLITS = {
   "2":[["Full Body A",["squat","hpush","hpull","hinge","core","side"]],["Full Body B",["hinge","vpush","vpull","single","core2","bi"]]],
-  "3":[["Full Body A",["squat","hpush","hpull","hams","core","side"]],["Full Body B",["hinge","vpush","vpull","single","core2","bi"]],["Full Body C",["squat2","hpush","hpull","hinge","calf","tri"]]],
+  "3":[["Push",["hpush","vpush","ipush","side","tri","tri2"]],["Pull",["vpull","hpull","row2","rear","bi","bi2"]],["Legs",["squat","hinge","squat2","hams","single","calf"]]],
   "4":[["Upper A",["hpush","hpull","vpush","vpull","bi","tri"]],["Lower A",["squat","hinge","single","calf","core","core2"]],["Upper B",["vpush","vpull","hpush","hpull","side","bi"]],["Lower B",["hinge","squat2","hams","single","core","calf"]]],
-  "5":[["Upper A",["hpush","hpull","vpush","vpull","bi","tri"]],["Lower A",["squat","hinge","single","calf","core","core2"]],["Upper B",["vpush","vpull","hpush","hpull","side","bi"]],["Lower B",["hinge","squat2","hams","single","core","calf"]],["Full Body",["squat","hpush","hpull","side","tri","core2"]]]
+  "5":[["Push",["hpush","vpush","ipush","side","tri","tri2"]],["Pull",["vpull","hpull","row2","rear","bi","bi2"]],["Legs",["squat","hinge","squat2","hams","single","calf"]],["Upper",["hpush","hpull","vpush","vpull","bi","tri"]],["Lower",["squat","hinge","single","calf","core","core2"]]]
 };
 const SCHED = {"2":"Mon + Thu","3":"Mon, Wed, Fri","4":"Mon, Tue, Thu, Fri","5":"Mon, Tue, Wed, Fri, Sat"};
-const COMPOUND = new Set(["squat","squat2","hinge","hpush","vpush","hpull","vpull"]);
+const COMPOUND = new Set(["squat","squat2","hinge","hpush","vpush","hpull","vpull","ipush","row2"]);
 
 function start(){show("quiz");render()}
 function show(id){for(const s of["intro","quiz","gate","result"])document.getElementById(s).classList.toggle("hide",s!==id);window.scrollTo(0,0)}
