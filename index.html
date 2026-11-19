@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zero to Lifter — Free Beginner Program</title>
+<meta name="description" content="Answer 5 quick questions and get a free beginner gym program built for you.">
+<style>
+:root{--bg:#050608;--dot:#16191f;--glow:#7dffb0;--txt:#eef2f5;--mut:#8b95a3;--card:#0d1014;--line:#1e242c}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);background-image:radial-gradient(var(--dot) 1.4px,transparent 1.4px);background-size:22px 22px;color:var(--txt);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;min-height:100vh;display:flex;justify-content:center}
+.wrap{width:100%;max-width:560px;padding:28px 20px 60px}
+.logo{font-weight:900;letter-spacing:.04em;font-size:15px;color:var(--glow);text-shadow:0 0 12px rgba(125,255,176,.55);text-transform:uppercase}
+h1{font-size:34px;line-height:1.1;margin:26px 0 10px;font-weight:900}
+h1 span{color:var(--glow);text-shadow:0 0 18px rgba(125,255,176,.5)}
+.sub{color:var(--mut);margin-bottom:26px}
+.bar{height:4px;background:var(--line);border-radius:4px;margin:22px 0 26px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--glow);box-shadow:0 0 12px var(--glow);transition:width .3s}
+.q{font-size:22px;font-weight:800;margin-bottom:16px}
+.opts{display:grid;gap:10px}
+.opt{background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:14px;padding:16px 18px;font-size:17px;text-align:left;cursor:pointer;transition:.15s}
+.opt:hover,.opt:focus{border-color:var(--glow);box-shadow:0 0 0 1px var(--glow),0 0 18px rgba(125,255,176,.18);outline:none}
+.opt small{display:block;color:var(--mut);font-size:13px;margin-top:2px}
+.btn{width:100%;background:var(--glow);color:#03140a;border:0;border-radius:14px;padding:17px;font-size:17px;font-weight:900;cursor:pointer;box-shadow:0 0 24px rgba(125,255,176,.35)}
+.btn:disabled{opacity:.5}
+.back{background:none;border:0;color:var(--mut);margin-top:16px;cursor:pointer;font-size:14px}
+input{width:100%;background:var(--card);border:1px solid var(--line);color:var(--txt);border-radius:14px;padding:16px;font-size:17px;margin-bottom:10px}
+input:focus{outline:none;border-color:var(--glow)}
+.fine{color:var(--mut);font-size:12.5px;margin-top:12px}
+.err{color:#ff8a8a;font-size:14px;min-height:20px;margin-bottom:6px}
+.day{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0}
+.day h3{font-size:18px;margin-bottom:10px;color:var(--glow)}
+.ex{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--line)}
+.ex:first-of-type{border-top:0}
+.ex b{font-weight:700}
+.ex span{color:var(--mut);white-space:nowrap;font-variant-numeric:tabular-nums}
+.box{border:1px solid var(--line);border-left:3px solid var(--glow);border-radius:12px;padding:14px 16px;margin:14px 0;background:rgba(125,255,176,.04)}
+.box h4{margin-bottom:6px}
+.box li{margin:4px 0 4px 18px;color:#cfd6dd}
+.hide{display:none}
+.fade{animation:f .25s ease}@keyframes f{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="logo">Zero to Lifter</div>
+
+  <section id="intro" class="fade">
+    <h1>Your free <span>beginner program</span>, built in 60 seconds.</h1>
+    <p class="sub">Answer 5 quick questions. Get a plan that fits your schedule, your equipment and your goal — plus exactly how to progress.</p>
+    <button class="btn" onclick="start()">Build my program →</button>
+  </section>
+
+  <section id="quiz" class="hide">
+    <div class="bar"><i id="prog"></i></div>
+    <div id="qbox"></div>
+    <button class="back" id="backBtn" onclick="back()">← Back</button>
+  </section>
+
+  <section id="gate" class="hide fade">
+    <div class="bar"><i style="width:100%"></i></div>
+    <div class="q">Your program is ready 💪</div>
+    <p class="sub">Where should we send it? You'll see it right away, and get a copy in your inbox plus a few short tips for your first weeks.</p>
+    <form id="form" onsubmit="return submitForm(event)" novalidate>
+      <input id="fname" type="text" placeholder="First name" autocomplete="given-name">
+      <input id="email" type="email" placeholder="Email address" autocomplete="email" required>
+      <div class="err" id="err"></div>
+      <button class="btn" id="sendBtn" type="submit">Show my program →</button>
+      <p class="fine">No spam. Unsubscribe anytime.</p>
+    </form>
+  </section>
+
+  <section id="result" class="hide fade"></section>
+</main>
+
+<script>
+const KIT_FORM_ID = "10213054";
+
+const QS = [
+  {k:"goal", q:"What's your main goal?", o:[["muscle","Build muscle","Look bigger and more defined"],["fat","Lose fat","Get leaner while keeping muscle"],["strength","Get stronger","Lift heavier weights"],["fit","Get fit and healthy","Feel better and build the habit"]]},
+  {k:"days", q:"How many days a week can you train?", o:[["2","2 days"],["3","3 days","Most popular for beginners"],["4","4 days"],["5","5 days"]]},
+  {k:"equip", q:"What can you train with?", o:[["gym","A full gym"],["db","Dumbbells only"],["bw","Bodyweight at home"]]},
+  {k:"exp", q:"How long have you been lifting?", o:[["new","Never / barely"],["some","Less than 6 months"],["more","6–12 months"]]},
+  {k:"time", q:"How long can each workout be?", o:[["30","About 30 minutes"],["45","About 45 minutes"],["60","About 60 minutes"]]}
+];
+let step=0; const A={};
+
+const LIB = {
+  squat:{gym:"Goblet Squat",db:"Goblet Squat",bw:"Bodyweight Squat"},
+  squat2:{gym:"Leg Press",db:"Dumbbell Split Squat",bw:"Split Squat"},
+  hinge:{gym:"Romanian Deadlift",db:"Dumbbell Romanian Deadlift",bw:"Glute Bridge"},
+  hpush:{gym:"Dumbbell Bench Press",db:"Dumbbell Floor Press",bw:"Push-Up (incline if needed)"},
+  vpush:{gym:"Seated Dumbbell Shoulder Press",db:"Seated Dumbbell Shoulder Press",bw:"Pike Push-Up"},
+  hpull:{gym:"Seated Cable Row",db:"One-Arm Dumbbell Row",bw:"Table / Towel Row"},
+  vpull:{gym:"Lat Pulldown",db:"Dumbbell Pullover",bw:"Doorframe Row"},
+  single:{gym:"Walking Lunge",db:"Reverse Lunge",bw:"Reverse Lunge"},
+  hams:{gym:"Lying Leg Curl",db:"Dumbbell Hamstring Walkout",bw:"Hamstring Walkout"},
+  calf:{gym:"Standing Calf Raise",db:"Single-Leg Calf Raise",bw:"Single-Leg Calf Raise"},
+  core:{gym:"Plank",db:"Plank",bw:"Plank"},
+  core2:{gym:"Dead Bug",db:"Dead Bug",bw:"Dead Bug"},
+  bi:{gym:"Dumbbell Curl",db:"Dumbbell Curl",bw:"Towel Curl (iso hold)"},
+  tri:{gym:"Cable Triceps Pushdown",db:"Overhead Dumbbell Extension",bw:"Bench Dip"},
+  side:{gym:"Lateral Raise",db:"Lateral Raise",bw:"Wall Lateral Raise (iso hold)"}
+};
+
+const SPLITS = {
+  "2":[["Full Body A",["squat","hpush","hpull","hinge","core","side"]],["Full Body B",["hinge","vpush","vpull","single","core2","bi"]]],
+  "3":[["Full Body A",["squat","hpush","hpull","hams","core","side"]],["Full Body B",["hinge","vpush","vpull","single","core2","bi"]],["Full Body C",["squat2","hpush","hpull","hinge","calf","tri"]]],
+  "4":[["Upper A",["hpush","hpull","vpush","vpull","bi","tri"]],["Lower A",["squat","hinge","single","calf","core","core2"]],["Upper B",["vpush","vpull","hpush","hpull","side","bi"]],["Lower B",["hinge","squat2","hams","single","core","calf"]]],
+  "5":[["Upper A",["hpush","hpull","vpush","vpull","bi","tri"]],["Lower A",["squat","hinge","single","calf","core","core2"]],["Upper B",["vpush","vpull","hpush","hpull","side","bi"]],["Lower B",["hinge","squat2","hams","single","core","calf"]],["Full Body",["squat","hpush","hpull","side","tri","core2"]]]
+};
+const SCHED = {"2":"Mon + Thu","3":"Mon, Wed, Fri","4":"Mon, Tue, Thu, Fri","5":"Mon, Tue, Wed, Fri, Sat"};
+const COMPOUND = new Set(["squat","squat2","hinge","hpush","vpush","hpull","vpull"]);
+
+function start(){show("quiz");render()}
+function show(id){for(const s of["intro","quiz","gate","result"])document.getElementById(s).classList.toggle("hide",s!==id);window.scrollTo(0,0)}
+function render(){
+  const Q=QS[step];
+  document.getElementById("prog").style.width=(step/QS.length*100)+"%";
+  document.getElementById("backBtn").style.visibility=step?"visible":"hidden";
+  const box=document.getElementById("qbox");
+  box.innerHTML=`<div class="fade"><div class="q">${Q.q}</div><div class="opts">${Q.o.map(o=>`<button class="opt" data-v="${o[0]}">${o[1]}${o[2]?`<small>${o[2]}</small>`:""}</button>`).join("")}</div></div>`;
+  box.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{A[Q.k]=b.dataset.v;step++;step<QS.length?render():show("gate")});
+}
+function back(){if(step>0){step--;render()}}
+
+function scheme(slot,idx){
+  const comp=COMPOUND.has(slot)&&idx<3, g=A.goal;
+  let sets=A.exp==="new"?2:3, reps;
+  if(g==="strength")reps=comp?"5–8":"10–12";
+  else if(g==="fat")reps=comp?"8–12":"12–15";
+  else reps=comp?"6–10":"10–15";
+  if(slot==="core")return `${sets} × 20–40 sec`;
+  if(slot==="core2")return `${sets} × 6–10 / side`;
+  if(A.equip==="bw"){const nm=LIB[slot].bw;
+    if(/iso hold/.test(nm))return `${sets} × 20–30 sec hold`;
+    if(/Squat|Lunge|Bridge|Calf|Walkout|Dip/.test(nm))reps="12–20, slow on the way down";
+    else reps="as many as you can, stop 2 short";}
+  if(A.exp!=="new"&&comp&&g==="strength")sets=4;
+  return `${sets} × ${reps}`;
+}
+function buildPlan(){
+  const n={"30":4,"45":5,"60":6}[A.time];
+  return SPLITS[A.days].map(([name,slots])=>[name,slots.slice(0,n).map((s,i)=>[LIB[s][A.equip],scheme(s,i)])]);
+}
+function rest(){return A.goal==="strength"?"2–3 min on the first 3 lifts, 1–2 min on the rest":A.goal==="fat"?"60–90 sec":"90 sec–2 min on the first 3 lifts, 60–90 sec on the rest"}
+function goalTips(){
+  return {
+    muscle:["Eat enough protein most days — roughly 0.7–1 g per lb of bodyweight.","Sleep 7–9 hours. That's when you actually grow."],
+    fat:["Fat loss comes from your diet — training keeps your muscle while you lose fat.","Aim for 7–10k steps a day on top of these workouts."],
+    strength:["Keep the first lift of each day as your 'main' lift and log every set.","Add weight in small jumps — 5 lb on lower body, 2.5–5 lb on upper body."],
+    fit:["Consistency beats intensity. Showing up 3 weeks in a row is the win.","Add a 20–30 min walk on rest days."]
+  }[A.goal];
+}
+function renderResult(name){
+  const plan=buildPlan(), who=name?`${name}, here's`:"Here's";
+  const labels={muscle:"Build Muscle",fat:"Lose Fat",strength:"Get Stronger",fit:"Get Fit"};
+  let h=`<h1>${who} your <span>${A.days}-day plan</span></h1><p class="sub">Goal: ${labels[A.goal]} · ${A.time} min sessions · Train: ${SCHED[A.days]}</p>`;
+  h+=plan.map(([d,ex])=>`<div class="day"><h3>${d}</h3>${ex.map(([e,s])=>`<div class="ex"><b>${e}</b><span>${s}</span></div>`).join("")}</div>`).join("");
+  h+=`<div class="box"><h4>How to progress (the part most beginners skip)</h4><ul>
+  <li>Pick a weight you could lift 2–3 more reps with at the end of each set.</li>
+  <li>When you hit the <b>top</b> of the rep range on every set, ${A.equip==="bw"?"make it harder next time — slower reps, a pause at the bottom, or a harder variation":"add a little weight next time"}.</li>
+  <li>Write down every set. If the numbers go up over weeks, it's working.</li></ul></div>`;
+  h+=`<div class="box"><h4>The basics</h4><ul><li>Rest: ${rest()}.</li><li>Warm up with 1–2 light sets of your first exercise.</li>${A.exp==="new"?"<li>First 2 weeks: go light and learn the movements. Ego can wait.</li>":""}${goalTips().map(t=>`<li>${t}</li>`).join("")}</ul></div>`;
+  h+=`<p class="fine">General fitness information only — not medical advice. If something hurts (sharp or worsening pain, not normal muscle effort), stop and check with a health professional.</p>`;
+  h+=`<p class="fine" style="margin-top:18px">Made by <b>@zerotolifter</b> — new tips every day on IG, TikTok and YouTube.</p>`;
+  const r=document.getElementById("result"); r.innerHTML=h; show("result");
+}
+
+async function submitForm(e){
+  e.preventDefault();
+  const email=document.getElementById("email").value.trim(), name=document.getElementById("fname").value.trim();
+  const err=document.getElementById("err");
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){err.textContent="Enter a valid email so we can send your plan.";return false}
+  err.textContent=""; const b=document.getElementById("sendBtn"); b.disabled=true; b.textContent="Building…";
+  const fd=new FormData(); fd.append("email_address",email); if(name)fd.append("fields[first_name]",name);
+  for(const k in A)fd.append(`fields[ztl_${k}]`,A[k]);
+  try{ if(!KIT_FORM_ID.startsWith("REPLACE")) await fetch(`https://app.kit.com/forms/${KIT_FORM_ID}/subscriptions`,{method:"POST",body:fd,mode:"no-cors"}); }catch(_){}
+  renderResult(name.replace(/[<>&"]/g,""));
+  return false;
+}
+</script>
+</body>
+</html>
